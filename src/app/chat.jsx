@@ -9,7 +9,7 @@ const Chat = () => {
 
     const [msg, setMsg] = useState('');
     const [socket, setSocket] = useState(null);
- 
+    const [msgs,setMsgs]=useState([]);
  
     useEffect(() => {
          // Establish WebSocket connection
@@ -24,12 +24,34 @@ const Chat = () => {
         e.preventDefault();
         if(socket) {
             socket.emit('chat msg', msg);
+            setMsgs([...msgs,msg]);
             setMsg('');
         }
     }
   
   return (
     <div>
+
+      <div className='msgs-container'>
+          {msgs.map((msg, index) => (
+              <div key={index} className='msg text-right m-5'>
+                       {msg}
+              </div>
+          ))}
+      </div>
+      {/* all the components with hook will render again */}
+      {/* <div className='msgs-container'>
+          {msgs.map((msg, index) => (
+              <div key={index} className='msg text-right m-5'>
+                       {"From Div 2"+msg}
+              </div>
+          ))}
+      </div> */}
+
+
+
+
+
         <form onSubmit={sendMsg} class="max-w-md mx-auto my-10">  
             <div class="relative">  
                 <input type="text"
