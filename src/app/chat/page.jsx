@@ -15,7 +15,11 @@ const Chat = () => {
 
         console.log("Chat called ::: --------------------------");
          // Establish WebSocket connection
-        const newSocket = io('http://localhost:8080');
+        const newSocket = io('http://localhost:8080',{
+            query:{
+                username:"Mahmmadhusen"
+            }
+        });
         setSocket(newSocket);
 
 
@@ -45,7 +49,13 @@ const Chat = () => {
     const sendMsg = (e) => {
         e.preventDefault();
         if(socket) {
-            socket.emit('chat msg', msg);
+            
+            const messageToBeSent={
+                testMsg:msg,
+                sender:"Raju",
+                receiver:"Mahmmahusen"
+            }
+            socket.emit('chat msg', messageToBeSent);
             // Reason of Aerro ????
             setMsgs(msgs=>[...msgs,{text:msg,sentByCurrentUser:true}]);
             setMsg('');

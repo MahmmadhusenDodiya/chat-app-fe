@@ -14,7 +14,7 @@ const Auth = () => {
 
   const signUpFunc = async (event) => {
     event.preventDefault();
-
+    console.log("signup called");
     try {
       console.log("username ------------ " + username + " password" + password);
       
@@ -26,7 +26,7 @@ const Auth = () => {
           withCredentials: true
         })
         console.log(res);
-      //   for(let i=1;i<=10000000000;i++)
+      //   for(let i=1;i<=10000000000000000;i++)
       // {
       //   let tt=1;
       //   tt++;
@@ -46,17 +46,19 @@ const Auth = () => {
 
   const loginFunc = async (event) => {
     event.preventDefault();
-
+    console.log("login called from auth.jsx");
 
     try {
-      const res = await axios.post('http://localhost:8080/auth/login', {
+
+      console.log(username,password);
+      const res = await axios.post('http://localhost:5000/auth/login', {
         username: username,
         password: password
       }, {
         withCredentials: true
       })
 
-      router.push('/auth')
+      router.replace('/chat');
 
 
     } catch (error) {
