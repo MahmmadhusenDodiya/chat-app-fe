@@ -3,6 +3,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import io, { Socket } from "socket.io-client"
+import {userAuthStore} from '../zustand/userAuthStore';
 
 const Chat = () => {
 
@@ -10,14 +11,16 @@ const Chat = () => {
     const [msg, setMsg] = useState('');
     const [socket, setSocket] = useState(null);
     const [msgs,setMsgs]=useState([]);
- 
+    const {authName}=userAuthStore();
+
+
     useEffect(() => {
 
         console.log("Chat called ::: --------------------------");
          // Establish WebSocket connection
         const newSocket = io('http://localhost:8080',{
             query:{
-                username:"Mahmmadhusen"
+                username:authName
             }
         });
         setSocket(newSocket);
@@ -25,8 +28,8 @@ const Chat = () => {
 
         //listen the message 
         newSocket.on('chat msg',(msg)=>{
-            console.log("received message on client "+msg);
-            console.log("msgs="+msgs+" new message"+msg);
+            console.log("received message on client "+msg.sender);
+            console.log("msgs="+msgs+" new message"+msg.testMsg);
             
             let newmsgs=[...msgs,msg];
             // add the message on top
@@ -52,8 +55,8 @@ const Chat = () => {
             
             const messageToBeSent={
                 testMsg:msg,
-                sender:"Raju",
-                receiver:"Mahmmahusen"
+                sender:authName,
+                receiver:"Raju"
             }
             socket.emit('chat msg', messageToBeSent);
             // Reason of Aerro ????

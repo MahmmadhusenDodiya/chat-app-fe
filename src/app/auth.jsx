@@ -3,6 +3,7 @@ import axios from "axios"
 import React from 'react'
 import { useState } from "react"
 import { useRouter } from 'next/navigation'
+import {userAuthStore} from "./zustand/userAuthStore"
 
 // react aerrow function export component
 const Auth = () => {
@@ -10,7 +11,7 @@ const Auth = () => {
   const router = useRouter()
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
-
+  const {authName,updateAuthName}=userAuthStore();
 
   const signUpFunc = async (event) => {
     event.preventDefault();
@@ -35,7 +36,7 @@ const Auth = () => {
       if (res.data.message === "username already exists") {
         alert('Username already exists');
       } else {
-        
+        updateAuthName(username);
         router.replace('/chat')
       }
     } catch (error) {
@@ -57,7 +58,7 @@ const Auth = () => {
       }, {
         withCredentials: true
       })
-
+      updateAuthName(username);
       router.replace('/chat');
 
 
