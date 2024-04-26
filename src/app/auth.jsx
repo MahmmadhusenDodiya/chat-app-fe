@@ -3,7 +3,7 @@ import axios from "axios"
 import React from 'react'
 import { useState } from "react"
 import { useRouter } from 'next/navigation'
-import {userAuthStore} from "./zustand/userAuthStore"
+import {useAuthStore} from "./zustand/useAuthStore"
 
 // react aerrow function export component
 const Auth = () => {
@@ -11,7 +11,7 @@ const Auth = () => {
   const router = useRouter()
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const {authName,updateAuthName}=userAuthStore();
+  const {authName,updateAuthName}=useAuthStore();
 
   const signUpFunc = async (event) => {
     event.preventDefault();
