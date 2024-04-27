@@ -96,11 +96,11 @@ const Chat = () => {
                 <ChatUsers/>
             </div>
             <div className='w-4/5 flex flex-col'>
-                <div className='h-8 bg-yellow-200 p-1'>
+                <div className='max-h-10 bg-green-200 p-1'>
                     <h1><b>{authName} is Chatting with Receiver = {chatReceiver}</b></h1>
                 </div>
                 {/* overflow-scroll */}
-                <div className='msgs-container h-3/5 '>
+                <div className='msgs-container h-4/5 overflow-y-auto scrollbar-thin noarrows scrollbar-thumb-red-500 scrollbar-track-gray-100'>
                     {  
                         chatMsgs.map((msg, index) => (
                             <div key={index} className={`p-1 m-5 ${msg.sender === authName ? 'text-right' : 'text-left'}`}>
@@ -112,7 +112,7 @@ const Chat = () => {
                     }
                 </div>
 
-                <div className='h-1/5 flex items-center justify-center'>
+                <div className='h-1/6 flex items-end justify-center'>
                     <form onSubmit={sendMsg} className="w-4/5 mx-auto my-10">
                         <div className="relative">
                             <input type="text"

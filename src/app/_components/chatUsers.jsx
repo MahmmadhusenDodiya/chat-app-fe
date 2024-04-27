@@ -17,20 +17,23 @@ const ChatUser = () => {
         updateChatReceiver(user.username);
     }
 
-    function changeColor(element) {
-        console.log("OKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+    // Get all divs with the class "color-box"
+    const divs = document.querySelectorAll('.color-box');
 
+    console.log("length of divs "+divs.length);
+    divs.forEach(div => {
+      div.addEventListener('click', function() {
         // Reset background color of all divs
-        var divs = document.getElementsByClassName('color-box');
-        for (var i = 0; i < divs.length; i++) {
-          divs[i].classList.remove('bg-yellow-500');
-          divs[i].classList.add('bg-blue-500');
-        }
-        
+        divs.forEach(d => {
+          d.classList.remove('bg-slate-300');
+          d.classList.add('bg-green-300');
+        });
+
         // Change background color of clicked div
-        element.classList.remove('bg-blue-500');
-        element.classList.add('bg-yellow-500');
-      }
+        this.classList.remove('bg-green-300');
+        this.classList.add('bg-slate-300');
+      });
+    });
 
     useEffect(() => {
         const getMsgs = async () => {
@@ -69,12 +72,12 @@ const ChatUser = () => {
 
 
     return (
-        <div>
+        <div className='max-h-lvh overflow-y-auto scrollbar-thin noarrows scrollbar-thumb-red-500 scrollbar-track-gray-300 '>
 
             {users.map((user, index) => (
                 <div onClick={() =>{ setChatReceiver(user);
-                    changeColor(this); }}  className="color-box hover:cursor-pointer bg-green-200 rounded-xl m-3 p-5">
-                    {(index)+"."+user.username}
+                     }} key={index} className="color-box text-xl hover:cursor-pointer bg-green-300 rounded-xl m-3 p-5">
+                    {user.username}
                 </div>
             ))}
 
