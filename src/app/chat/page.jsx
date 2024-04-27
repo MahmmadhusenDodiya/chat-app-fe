@@ -5,8 +5,11 @@ import React, { useState, useEffect } from 'react'
 import io, { Socket } from "socket.io-client"
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUserStore } from '../zustand/useUsersStore';
+import { useChatReceiverStore } from '../zustand/useChatReceiverStore';
+
 import axios from 'axios';
 import ChatUsers from '../_components/chatUsers';
+
 
 const Chat = () => {
 
@@ -16,6 +19,7 @@ const Chat = () => {
     const [msgs, setMsgs] = useState([]);
     const { authName } = useAuthStore();
     const { updateUsers } = useUserStore();
+    const {chatReceiver} =useChatReceiverStore();
 
     useEffect(() => {
 
@@ -69,7 +73,7 @@ const Chat = () => {
             const messageToBeSent = {
                 textMsg: msg,
                 sender: authName,
-                receiver: "Raju"
+                receiver: chatReceiver
             }
             socket.emit('chat msg', messageToBeSent);
             // Reason of Aerro ????
@@ -84,9 +88,11 @@ const Chat = () => {
                 <ChatUsers/>
             </div>
             <div className='w-4/5 flex flex-col'>
-
+                <div className='h-6 bg-red-200'>
+                    <h1>{authName} is Chatting with Receiver = {chatReceiver}</h1>
+                </div>
                 {/* overflow-scroll */}
-                <div className='msgs-container h-4/5 '>
+                <div className='msgs-container h-3/5 '>
                     {
                         msgs.map((msg, index) => (
                             <div key={index} className={`p-1 m-5 ${msg.sentByCurrentUser ? 'text-right' : 'text-left'}`}>
