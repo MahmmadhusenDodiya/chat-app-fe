@@ -6,7 +6,7 @@ import io, { Socket } from "socket.io-client"
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUserStore } from '../zustand/useUsersStore';
 import { useChatReceiverStore } from '../zustand/useChatReceiverStore';
-
+import { useChatMsgsStore } from '../zustand/useChatMsgsStore';
 import axios from 'axios';
 import ChatUsers from '../_components/chatUsers';
 
@@ -16,10 +16,11 @@ const Chat = () => {
     // React hooks that will mange state of variable and when it changes entire component who contain it will also re render 
     const [msg, setMsg] = useState('');
     const [socket, setSocket] = useState(null);
-    const [msgs, setMsgs] = useState([]);
+    // const [msgs, setMsgs] = useState([]);
     const { authName } = useAuthStore();
     const { updateUsers } = useUserStore();
     const {chatReceiver} =useChatReceiverStore();
+    const {chatMsgs,updateChatMsgs}=useChatMsgsStore();
 
     useEffect(() => {
 
@@ -34,6 +35,7 @@ const Chat = () => {
 
         const getUserData = async () => {
             console.log("before users users users");
+
             const res = await axios.get("http://localhost:5000/users", {
                 withCredentials: true    // passing cookies aswell
             });
@@ -46,7 +48,7 @@ const Chat = () => {
         //listen the message 
         newSocket.on('chat msg', (msg) => {
             console.log("receiver of message=" + msg.sender);
-            console.log("msgs=" + msgs + "  ||   New message=" + msg.textMsg);
+            console.log("msgs=" + msg + "  ||   New message=" + msg.textMsg);
 
             let newmsgs = [...msgs, msg];
             // add the message on top
@@ -55,7 +57,10 @@ const Chat = () => {
             // {
             //     console.log("this is text "+newmsgs[i]);
             // }
-            setMsgs(msgs => [...msgs, { text: msg.textMsg, sentByCurrentUser: false }]);
+            
+            updateChatMsgs([...chatMsgs,msg]);
+            
+            // setMsgs(msgs => [...msgs, { text: msg.textMsg, sentByCurrentUser: false }]);
             console.log("total =" + [...msgs, { text: msg.textMsg, sentByCurrentUser: false }]);
 
         });
@@ -71,13 +76,16 @@ const Chat = () => {
         if (socket) {
 
             const messageToBeSent = {
-                textMsg: msg,
+                text: msg,
                 sender: authName,
                 receiver: chatReceiver
             }
             socket.emit('chat msg', messageToBeSent);
             // Reason of Aerro ????
-            setMsgs(msgs => [...msgs, { text: msg, sentByCurrentUser: true }]);
+            // setMsgs(msgs => [...msgs, { text: msg, sentByCurrentUser: true }]);
+
+            updateChatMsgs([...chatMsgs,messageToBeSent]);
+
             setMsg('');
         }
     }
@@ -88,15 +96,15 @@ const Chat = () => {
                 <ChatUsers/>
             </div>
             <div className='w-4/5 flex flex-col'>
-                <div className='h-6 bg-red-200'>
-                    <h1>{authName} is Chatting with Receiver = {chatReceiver}</h1>
+                <div className='h-8 bg-yellow-200 p-1'>
+                    <h1><b>{authName} is Chatting with Receiver = {chatReceiver}</b></h1>
                 </div>
                 {/* overflow-scroll */}
                 <div className='msgs-container h-3/5 '>
-                    {
-                        msgs.map((msg, index) => (
-                            <div key={index} className={`p-1 m-5 ${msg.sentByCurrentUser ? 'text-right' : 'text-left'}`}>
-                                <span className={`p-3 rounded-lg ${msg.sentByCurrentUser ? 'bg-blue-200' : 'bg-red-200'}`} >
+                    {  
+                        chatMsgs.map((msg, index) => (
+                            <div key={index} className={`p-1 m-5 ${msg.sender === authName ? 'text-right' : 'text-left'}`}>
+                                <span className={`p-3 rounded-lg ${msg.sender === authName ? 'bg-blue-200' : 'bg-red-200'}`} >
                                     {msg.text}
                                 </span>
                             </div>
