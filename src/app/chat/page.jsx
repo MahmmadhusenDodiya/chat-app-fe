@@ -9,14 +9,22 @@ import { useChatReceiverStore } from '../zustand/useChatReceiverStore';
 import { useChatMsgsStore } from '../zustand/useChatMsgsStore';
 import axios from 'axios';
 import ChatUsers from '../_components/chatUsers';
+import { redirect } from 'next/navigation';
 
 
 const Chat = () => {
 
     // React hooks that will mange state of variable and when it changes entire component who contain it will also re render 
+
+
+    //current message that is sending
     const [msg, setMsg] = useState('');
+
+    //Socket State
     const [socket, setSocket] = useState(null);
-    // const [msgs, setMsgs] = useState([]);
+
+
+    const [msgs, setMsgs] = useState([]);
     const { authName } = useAuthStore();
     const { updateUsers } = useUserStore();
     const {chatReceiver} =useChatReceiverStore();
@@ -24,6 +32,12 @@ const Chat = () => {
 
     useEffect(() => {
 
+        if(!authName)
+        {
+            console.log("user login data not found so going back to home");
+            console.log('redirecting');
+            redirect("/");
+        }
         console.log("Chat called ::: --------------------------");
         // Establish WebSocket connection
         const newSocket = io('http://localhost:8080', {
@@ -34,35 +48,45 @@ const Chat = () => {
         setSocket(newSocket);
 
         const getUserData = async () => {
-            console.log("before users users users");
+            console.log("Get List of All users");
 
             const res = await axios.get("http://localhost:5000/users", {
-                withCredentials: true    // passing cookies aswell
+                withCredentials: true
             });
             updateUsers(res.data);
+            console.log("this is list of users "+res.data);
             console.log(res.data);
-            console.log("THis is dataatatatataattata");
         };
         getUserData();
 
         //listen the message 
         newSocket.on('chat msg', (msg) => {
-            console.log("receiver of message=" + msg.sender);
-            console.log("msgs=" + msg + "  ||   New message=" + msg.textMsg);
+            console.log("Sender of message=" + msg.sender);
+            console.log("receiver of message ="  + msg.receiver + " Text of New message = " + msg.text);
 
-            let newmsgs = [...msgs, msg];
-            // add the message on top
-            //setMsgs(msgs=>[...msgs,msg]);
-            // for(let i=0;i<newmsgs.length;i++)
+            // let newmsgs = [...msgs, msg];
+            // console.log("-------------Printing Old messages -------------@@@");
+            // for(let x=0;x<chatMsgs.length;x++)
             // {
-            //     console.log("this is text "+newmsgs[i]);
+            //     console.log(chatMsgs[i]);
             // }
-            
-            updateChatMsgs([...chatMsgs,msg]);
-            
-            // setMsgs(msgs => [...msgs, { text: msg.textMsg, sentByCurrentUser: false }]);
-            console.log("total =" + [...msgs, { text: msg.textMsg, sentByCurrentUser: false }]);
+            // console.log("--------------- Old Message Ended -------------------@@@");
 
+
+
+            console.log("this is chat messages ="+{chatMsgs});
+            console.log("1 Before Lenght ="+chatMsgs.length);
+            if(!chatMsgs) console.log("Chat message are null");
+            else console.log("chat messages are not null and its type="+typeof(chatMsgs));
+
+            let messageArr=chatMsgs;
+            console.log("after initalization All Operations Lenght ="+messageArr.length);
+            console.log("new Message arr = "+messageArr);
+            messageArr.push(msg);
+            console.log("new message arr after pushing new element is"+messageArr);
+            // updateChatMsgs(messageArr);
+            updateChatMsgs(chatMsgs);
+            console.log("After All Operations Lenght ="+messageArr.length);
         });
 
 
@@ -73,6 +97,7 @@ const Chat = () => {
 
     const sendMsg = (e) => {
         e.preventDefault();
+        console.log("send message called");
         if (socket) {
 
             const messageToBeSent = {
@@ -80,12 +105,16 @@ const Chat = () => {
                 sender: authName,
                 receiver: chatReceiver
             }
+            console.log(typeof(messageToBeSent));
             socket.emit('chat msg', messageToBeSent);
-            // Reason of Aerro ????
             // setMsgs(msgs => [...msgs, { text: msg, sentByCurrentUser: true }]);
 
-            updateChatMsgs([...chatMsgs,messageToBeSent]);
+            console.log("When we send message before adding element length of arr="+chatMsgs.length);
+            // updateChatMsgs([...chatMsgs,messageToBeSent]);
+            updateChatMsgs([messageToBeSent]);
+            console.log("When we send message after adding element length of arr="+chatMsgs.length);
 
+          //updateChatMsgs([...chatMsgs,msg]);
             setMsg('');
         }
     }
@@ -135,3 +164,5 @@ const Chat = () => {
 
 
 export default Chat 
+
+
