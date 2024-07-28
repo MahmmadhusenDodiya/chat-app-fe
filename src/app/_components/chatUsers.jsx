@@ -10,7 +10,7 @@ import axios from 'axios';
 const ChatUser = () => {
     const { users } = useUserStore();
     const { chatReceiver, updateChatReceiver } = useChatReceiverStore();
-    const { updateChatMsgs } = useChatMsgsStore();
+    const { CreateChatMessages } = useChatMsgsStore();
     const { authName } = useAuthStore();
 
     const setChatReceiver = (user) => {
@@ -57,10 +57,10 @@ const ChatUser = () => {
                     console.log("type of this data="+Array.isArray(res.data));
                 if (res.data.length !== 0) {
                     console.log("call 1---------------------------");
-                    updateChatMsgs(res.data);
+                    CreateChatMessages(res.data);
                 } else {
                     console.log("call 2----------------------------");
-                    updateChatMsgs([]);
+                    CreateChatMessages([]);
                 }
             } catch (error) {
                 console.log("this is error " + error);

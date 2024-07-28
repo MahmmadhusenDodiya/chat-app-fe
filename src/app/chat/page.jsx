@@ -74,19 +74,19 @@ const Chat = () => {
 
 
 
-            console.log("this is chat messages ="+{chatMsgs});
-            console.log("1 Before Lenght ="+chatMsgs.length);
-            if(!chatMsgs) console.log("Chat message are null");
-            else console.log("chat messages are not null and its type="+typeof(chatMsgs));
+            // console.log("this is chat messages ="+{chatMsgs});
+            // console.log("1 Before Lenght ="+chatMsgs.length);
+            // if(!chatMsgs) console.log("Chat message are null");
+            // else console.log("chat messages are not null and its type="+typeof(chatMsgs));
 
-            let messageArr=chatMsgs;
-            console.log("after initalization All Operations Lenght ="+messageArr.length);
-            console.log("new Message arr = "+messageArr);
-            messageArr.push(msg);
-            console.log("new message arr after pushing new element is"+messageArr);
+            // let messageArr=chatMsgs;
+            // console.log("after initalization All Operations Lenght ="+messageArr.length);
+            // console.log("new Message arr = "+messageArr);
+            // messageArr.push(msg);
+            // console.log("new message arr after pushing new element is"+messageArr);
             // updateChatMsgs(messageArr);
-            updateChatMsgs(chatMsgs);
-            console.log("After All Operations Lenght ="+messageArr.length);
+            updateChatMsgs([msg]);
+            // console.log("After All Operations Lenght ="+messageArr.length);
         });
 
 
