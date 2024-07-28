@@ -1,8 +1,8 @@
 // React Arrow Function Export Component
 // Use Client must be added to top when we use useState and useEffect
-'use client'
-import React, { useState, useEffect } from 'react'
-import io, { Socket } from "socket.io-client"
+'use client';
+import React, { useState, useEffect } from 'react';
+import io, { Socket } from "socket.io-client";
 import { useAuthStore } from '../zustand/useAuthStore';
 import { useUserStore } from '../zustand/useUsersStore';
 import { useChatReceiverStore } from '../zustand/useChatReceiverStore';
@@ -50,7 +50,7 @@ const Chat = () => {
         const getUserData = async () => {
             console.log("Get List of All users");
 
-            const res = await axios.get("http://localhost:5000/users", {
+            const res = await axios.get("http://localhost:8081/users", {
                 withCredentials: true
             });
             updateUsers(res.data);

@@ -19,7 +19,7 @@ const Auth = () => {
     try {
       console.log("username ------------ " + username + " password" + password);
       
-      const res = await axios.post('http://localhost:5000/auth/signup', {
+      const res = await axios.post('http://localhost:8081/auth/signup', {
         username: username,
         password: password
       },
@@ -52,7 +52,7 @@ const Auth = () => {
     try {
 
       console.log(username,password);
-      const res = await axios.post('http://localhost:5000/auth/login', {
+      const res = await axios.post('http://localhost:8081/auth/login', {
         username: username,
         password: password
       }, {
